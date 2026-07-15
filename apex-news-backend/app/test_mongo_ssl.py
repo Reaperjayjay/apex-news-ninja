@@ -1,11 +1,22 @@
+import os
 from pymongo import MongoClient
+from dotenv import load_dotenv
 
-uri = "mongodb+srv://Ceejay:Boynova17@apexnewsninja.brwhzbz.mongodb.net/apex_news_ninja?retryWrites=true&w=majority"
+# Load the existing .env file
+load_dotenv()
 
+# Retrieve the hidden credentials
+uri = os.getenv("MONGODB_URI")
+ca_path = os.getenv("CA_FILE_PATH")
+
+if not uri or not ca_path:
+    raise ValueError("Database credentials or CA file path missing from .env file.")
+
+# Establish the secure connection
 client = MongoClient(
     uri,
     tls=True,
-    tlsCAFile=r"C:\Users\HP\My Projects\ApexNewsNinja\ApexNewsNinja_Backend\atlas-ca.pem",
+    tlsCAFile=ca_path,
     tlsAllowInvalidCertificates=False
 )
 
